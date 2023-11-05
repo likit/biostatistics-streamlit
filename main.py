@@ -1,3 +1,5 @@
+import random
+
 import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
@@ -11,7 +13,8 @@ st.title('Welcome to Biostatistics Learning Platform!')
 st.markdown('Developed by ***Likit Preeyanon, Ph.D.*** E-mail: *likit.pre@mahidol.edu*')
 
 st.header('Central Limit Theorem!')
-st.markdown('สมมติว่าเราทำการเก็บรวบรวมคะแนนสอบกลางภาคของนักศึกษารายวิชาปรสิตวิทยาทางการแพทย์ จำนวน 80 คน ได้ข้อมูลต่อไปนี้')
+st.markdown(
+    'สมมติว่าเราทำการเก็บรวบรวมคะแนนสอบกลางภาคของนักศึกษารายวิชาปรสิตวิทยาทางการแพทย์ จำนวน 80 คน ได้ข้อมูลต่อไปนี้')
 st.write(scores)
 
 mean_scores = scores.mean()[0]
@@ -26,7 +29,8 @@ ax.hist(scores, bins=20)
 
 st.pyplot(fig)
 
-st.markdown(r'หากนักศึกษาทำการสุ่มข้อมูลจากนักศึกษาครั้งละ $n$ คนและนำมาหาค่าเฉลี่ย $(sample\ mean)$ โดยทำซ้ำจำนวน $n$ ครั้ง และนำมาสร้างกราฟ histogram ของค่าเฉลี่ย จะได้กราฟแสดงการกระจายตัวของ sample means เป็นอย่างไร')
+st.markdown(
+    r'หากนักศึกษาทำการสุ่มข้อมูลจากนักศึกษาครั้งละ $n$ คนและนำมาหาค่าเฉลี่ย $(sample\ mean)$ โดยทำซ้ำจำนวน $n$ ครั้ง และนำมาสร้างกราฟ histogram ของค่าเฉลี่ย จะได้กราฟแสดงการกระจายตัวของ sample means เป็นอย่างไร')
 
 
 def plot_deviation_sample_mean_chart(scores_mean, num_sample, num_trials):
@@ -67,7 +71,7 @@ def plot_deviation_sample_mean_chart(scores_mean, num_sample, num_trials):
 
     st.pyplot(fig)
 
-    st.markdown(r'Standard deviation of the sample means is {}'.format(np.mean([d**2 for d in deviations])))
+    # st.markdown(r'Standard deviation of the sample means is {}'.format(np.mean([d ** 2 for d in deviations])))
     st.markdown(r'Standard Error of the Mean $(SEM)$ is {}'.format(np.std(scores)[0] / np.sqrt(num_sample)))
 
 
@@ -116,21 +120,24 @@ def plot_z_score(sample_mean, mean, sigma, n):
     st.pyplot(fig)
 
 
-pop_mean = st.number_input('Population mean')
-sigma = st.number_input('Population standard deviation')
-n = st.number_input('Sample size')
-sample_mean = st.number_input('Sample mean')
+st.header('Z-statistic Calculator')
+pop_mean = st.number_input(r'$\mu$')
+sigma = st.number_input(r'$\sigma$')
+n = st.number_input(r'$n$')
+sample_mean = st.number_input(r'$\overline{x}$', key='sample_mean')
 zscore = (sample_mean - pop_mean) / (sigma / np.sqrt(n))
 
 st.markdown('Z statistic = {}'.format(calculate_z_stat(pop_mean, sigma, n, sample_mean)))
 st.markdown('SEM = {}'.format(sigma / np.sqrt(n)))
-#plot_norm_pdf(pop_mean, sigma, n)
+# plot_norm_pdf(pop_mean, sigma, n)
 plot_z_score(sample_mean, pop_mean, sigma, n)
 
 st.markdown('เราสามารถคำนวณหาค่าความน่าจะเป็นของค่า Z statistic ในโปรแกรม Excel ได้จากสูตร')
 st.code(f'NORM.S.DIST({zscore:.2f}, TRUE) = {norm.cdf(zscore):.2f}')
-st.markdown(f'หมายความว่าโอกาสที่จะได้ค่าต่ำกว่าหรือเท่ากับ {sample_mean} ({zscore:.2f}SD) คือ {norm.cdf(zscore)*100:.2f}%')
-st.markdown(f'หมายความว่าโอกาสที่จะได้ค่ามากกว่า {sample_mean} ({zscore:.2f}SD) คือ {(1 - norm.cdf(zscore))*100:.2f}%')
+st.markdown(
+    f'หมายความว่าโอกาสที่จะได้ค่าต่ำกว่าหรือเท่ากับ {sample_mean} ({zscore:.2f}SD) คือ {norm.cdf(zscore) * 100:.2f}%')
+st.markdown(
+    f'หมายความว่าโอกาสที่จะได้ค่ามากกว่า {sample_mean} ({zscore:.2f}SD) คือ {(1 - norm.cdf(zscore)) * 100:.2f}%')
 
 st.markdown('ในทางกลับกันเราสามารถคำนวณหา Z statistic จากความน่าจะเป็นได้ในโปรแกรม Excel ได้จากสูตร')
 st.code(f'NORM.S.INV({norm.cdf(zscore):.2f}) = {norm.ppf(norm.cdf(zscore)):.2f}')
@@ -140,33 +147,34 @@ normal_dist = Image.open('images/norm_dist.jpeg')
 st.image(normal_dist, caption='Normal Distribution')
 
 st.header('Self Check')
-st.markdown(r'1) ผลการสอบภาคปฏิบัติรายวิชาปรสิตวิทยาได้คะแนนเฉลี่ยเท่ากับ $24$ คะแนน โดยมีค่า $SD=4.6$ จงหาความน่าจะเป็นที่นักศึกษาจะได้คะแนนน้อยกว่า $18$ คะแนน')
+st.markdown(
+    r'1) ผลการสอบภาคปฏิบัติรายวิชาปรสิตวิทยาได้คะแนนเฉลี่ยเท่ากับ $24$ คะแนน โดยมีค่า $SD=4.6$ จงหาความน่าจะเป็นที่นักศึกษาจะได้คะแนนน้อยกว่า $18$ คะแนน')
 with st.expander('See an answer'):
     st.markdown(r'เราสามารถคำนวณหาค่าความน่าจะเป็นของค่า $Z-statistic$ ในโปรแกรม Excel ได้จากสูตร')
     zscore = (18 - 24) / (4.6 / np.sqrt(1))
     st.markdown(r'$Z-statistic = \frac{18-24}{\frac{4.6}{\sqrt{1}}} = -1.3043$')
     st.code(f'NORM.S.DIST({zscore:.4f}, TRUE) = {norm.cdf(zscore):.4f}')
 
-
-st.markdown(r'2) ครูใหญ่โรงเรียนแห่งหนึ่งได้รับผลการทดสอบ IQ จากนักเรียนคนหนึ่ง หากครูทราบว่าผลเฉลี่ย IQ ของนักเรียนในวัยเดียวกันทั้งประเทศคือ $100$ และค่า $SD$ คือ $15$ ค่าทางสถิติใดที่จะช่วยแปลผลคะแนนของนักเรียนคนนี้หากการกระจายตัวของคะแนน IQ เป็นแบบ normal distribution (Z distribution)')
+st.markdown(
+    r'2) ครูใหญ่โรงเรียนแห่งหนึ่งได้รับผลการทดสอบ IQ จากนักเรียนคนหนึ่ง หากครูทราบว่าผลเฉลี่ย IQ ของนักเรียนในวัยเดียวกันทั้งประเทศคือ $100$ และค่า $SD$ คือ $15$ ค่าทางสถิติใดที่จะช่วยแปลผลคะแนนของนักเรียนคนนี้หากการกระจายตัวของคะแนน IQ เป็นแบบ normal distribution (Z distribution)')
 with st.expander('See an answer'):
     st.markdown(r'เราสามารถคำนวณหาค่าความน่าจะเป็นของค่า $Z-statistic$ ในโปรแกรม Excel ได้จากสูตร')
     zscore = (80 - 100) / (15 / np.sqrt(1))
     st.markdown(r'$Z-statistic = \frac{80-100}{\frac{15}{\sqrt{1}}} = -1.3333$')
     st.code(f'NORM.S.DIST({zscore:.4f}, TRUE) = {norm.cdf(zscore):.4f}')
 
-
-st.markdown(r'3.1) นักเทคนิคการแพทย์ต้องการศึกษาผลของการทานอาหารมังสะวิรัตกับค่าคลอเลสเตอรอลในเลือด หากว่าค่าคลอเลสเตอรอลในผู้ชายระหว่างอายุ $20-65$ ปี มีการกระจายตัวแบบ normal distribution ด้วยค่าเฉลี่ยเท่ากับ $210 mg/dL$ และค่า $SD = 45$ mg/dL หากนักเทคนิคการแพทย์ได้ทำการเก็บตัวอย่างจำนวน $40$ คนที่อยู่ในกลุ่มอายุดังกล่าวหลังจากได้ทำการติดตามการทานอาหารมาเป็นเวลาหนึ่งปีและพบว่าค่าเฉลี่ยในกลุ่มนี้คือ $190 mg/dL$ ค่าสถิติใดที่ควรใช้ในการแปลผลนี้')
+st.markdown(
+    r'3.1) นักเทคนิคการแพทย์ต้องการศึกษาผลของการทานอาหารมังสะวิรัตกับค่าคลอเลสเตอรอลในเลือด หากว่าค่าคลอเลสเตอรอลในผู้ชายระหว่างอายุ $20-65$ ปี มีการกระจายตัวแบบ normal distribution ด้วยค่าเฉลี่ยเท่ากับ $210 mg/dL$ และค่า $SD = 45$ mg/dL หากนักเทคนิคการแพทย์ได้ทำการเก็บตัวอย่างจำนวน $40$ คนที่อยู่ในกลุ่มอายุดังกล่าวหลังจากได้ทำการติดตามการทานอาหารมาเป็นเวลาหนึ่งปีและพบว่าค่าเฉลี่ยในกลุ่มนี้คือ $190 mg/dL$ ค่าสถิติใดที่ควรใช้ในการแปลผลนี้')
 with st.expander('See an answer'):
     st.markdown(r'เราสามารถคำนวณหาค่าความน่าจะเป็นของค่า $Z-statistic$ ในโปรแกรม Excel ได้จากสูตร')
     zscore = (190 - 210) / (45 / np.sqrt(40))
     st.markdown(r'$Z-statistic = \frac{190-210}{\frac{45}{\sqrt{40}}} = -2.8109$')
     st.code(f'NORM.S.DIST({zscore:.4f}, TRUE) = {norm.cdf(zscore):.4f}')
 
-
 st.markdown(r'3.2) หากกำหนดค่า $p-value = 0.05$ ผลการทานอาหารมังสะวิรัตแตกต่างจากค่าเฉลี่ยทั่วไปอย่างมีนัยสำคัญหรือไม่')
 with st.expander('See an answer'):
-    st.markdown(r'เนื่องจากค่าความน่าจะเป็นที่ได้ค่า $\overline{x} = 190mg/dL$ จากกลุ่มประชากรที่มีค่า $\mu=210 mg/dL$ มีค่า $0.0025$ ซึ่งน้อยกว่าค่า $\alpha=(0.05)$ จึงถือว่ามีความแตกต่างอย่างมีนัยสำคัญ')
+    st.markdown(
+        r'เนื่องจากค่าความน่าจะเป็นที่ได้ค่า $\overline{x} = 190mg/dL$ จากกลุ่มประชากรที่มีค่า $\mu=210 mg/dL$ มีค่า $0.0025$ ซึ่งน้อยกว่าค่า $\alpha=(0.05)$ จึงถือว่ามีความแตกต่างอย่างมีนัยสำคัญ')
 
 st.markdown(r'3.3) หากค่าเฉลี่ยจากกลุ่มทดลองมีค่าเท่ากับ $220 mg/dL$ จะมีความแตกต่างจากค่าเฉลี่ยอย่างมีนัยสำคัญหรือไม่')
 with st.expander('See an answer'):
@@ -175,5 +183,102 @@ with st.expander('See an answer'):
     st.markdown(r'$Z-statistic = \frac{190-210}{\frac{45}{\sqrt{40}}} = 1.4055$')
     st.code(f'NORM.S.DIST({zscore:.4f}, TRUE) = {norm.cdf(zscore):.4f}')
 
-    st.markdown(r'ดังนั้นค่าความน่าจะเป็นที่จะได้ค่าเฉลี่ยมากกว่า $220 mg/dL$ คือ $1-{:.4f}={:.4f}$ ซึ่งเกินกว่าค่า $\alpha$ จึงถือว่าไม่แตกต่างอย่างมีนัยสำคัญ'.format(norm.cdf(zscore), 1-norm.cdf(zscore)))
+    st.markdown(r'ดังนั้นค่าความน่าจะเป็นที่จะได้ค่าเฉลี่ยมากกว่า $220 mg/dL$ คือ $1-{:.4f}={:.4f}$ ซึ่งเกินกว่าค่า '
+                r'$\alpha$ จึงถือว่าไม่แตกต่างอย่างมีนัยสำคัญ'.format(norm.cdf(zscore), 1 - norm.cdf(zscore)))
 
+st.header('Confidence Interval')
+n = 20
+sample_mean = scores.sample(n, random_state=20).mean()[0]
+st.markdown(
+    r'สมมติว่าเราทำการสุ่มค่าจากข้อมูลผลการสอบเบื้องต้นที่มีค่าเฉลี่ย $\mu=53.15$ จากนศ.เพียง ${n}$ คนจะได้ค่า $\overline{{x}}={sample_mean}$'.format(
+        sample_mean=sample_mean, n=n))
+st.markdown(
+    r'เนื่องจากเราทราบดีว่าค่าดังกล่าวมาจากการสุ่มตัวอย่างที่มีความผิดพลาดได้จาก $sampling\ error$ โดยค่าผิดพลาดมาตรฐาน $\sigma={std:.4f}$ ซึ่งสามารถคำนวณหาค่า $SE$ ได้ดังนี้'.format(
+        std=scores.std()[0]))
+st.markdown(r'$SE = \frac{\sigma}{\sqrt{n}} = \frac{10.66}{\sqrt{20}} = 2.383$')
+normal_dist = Image.open('images/norm_dist.jpeg')
+
+st.image(normal_dist)
+st.markdown(
+    r'จากภาพจะเห็นได้ว่า $95\%$ ของค่า $sample\ mean$ อยู่ในช่วงประมาณ $2\sigma$ ซึ่งเราคำนวณหาค่าที่แม่นยำได้จากสูตร')
+st.code('NORM.S.INV(0.975) = 1.959 ~ 1.96')
+st.code('NORM.S.INV(0.025) = -1.959 ~ -1.96')
+st.markdown(
+    r'สังเกตเราใช้ค่า $0.975$ แทน $0.95$ เนื่องจากเราต้องการค่าความมั่นใจ $95\%$ เมื่อแบ่งสองข้างของการกระจายตัวจะตกข้างละ $2.5\%$ ทางซ้ายและทางขวา')
+st.markdown(r'ซึ่งค่า $Z-statistic$ จากความน่าจะเป็นเท่ากับ $97.5\%$ และ $2.5\%$ คือ $1.96$ และ $-1.96$ ตามลำดับ')
+st.markdown(r'ค่า $95\%\ confidence\ interval$ คำนวณได้จาก')
+upper_bound = 1.96 * 2.383 + sample_mean
+lower_bound = -1.96 * 2.383 + sample_mean
+st.markdown(
+    r'$1.96SE + \overline{{x}} = 1.96\cdot2.383 + {sample_mean} = {upper_bound}$'.format(sample_mean=sample_mean,
+                                                                                         upper_bound=upper_bound))
+st.markdown(
+    r'$-1.96SE + \overline{{x}} = -1.96\cdot2.383 + {sample_mean} = {lower_bound}$'.format(sample_mean=sample_mean,
+                                                                                           lower_bound=lower_bound))
+st.markdown(r'คำตอบคือ $95\%\ CI = ({:.2f} - {:.2f})$'.format(lower_bound, upper_bound))
+
+
+def ci_norm_calculater(ci_alpha, ci_sigma, ci_sample_size, ci_mean):
+    upper_percent = 1 - (ci_alpha / 2.0)
+    z_stat = norm.ppf(upper_percent)
+    se = ci_sigma / np.sqrt(ci_sample_size)
+    return z_stat * se + ci_mean, (-1 * z_stat) * se + ci_mean, z_stat * se
+
+
+ci_alpha_demo = st.number_input(r'$\alpha$', key='alpha_demo')
+
+
+def plot_ci_from_scores(alpha, sigma, sample_size, mu):
+    outs = []
+    fig, ax = plt.subplots()
+    for i in range(100):
+        sample_mean = scores.sample(sample_size).mean()[0]
+        upper, lower, _ = ci_norm_calculater(alpha, sigma, sample_size, sample_mean)
+        color = 'blue' if lower < mu < upper else 'red'
+        if color == 'red':
+            outs.append(color)
+        ax.hlines(y=random.randint(1, 30) + (random.randint(30, 40) / 10.0), xmin=lower, xmax=upper, color=color)
+        ax.set_xlim(0, 100)
+        ax.set_ylim(0, 40)
+
+    ax.vlines(ymin=0, ymax=40, x=mu, color='green')
+
+    st.pyplot(fig)
+    st.markdown(r'Out of mean range = ${}$'.format(len(outs)))
+
+
+plot_ci_from_scores(ci_alpha_demo, scores.std()[0], 20, mu=mean_scores)
+
+st.header('Self Check')
+st.markdown(r'1) ค่า $CI$ เท่าใดมีช่วงกว้างกว่ากันระหว่าง $95\%CI$ กับ $90\%CI$')
+with st.expander('See an answer'):
+    st.markdown(r'ค่า $95\%CI$ มีค่ากว้างกว่าค่า $90\%CI$')
+
+st.header('Confidence Interval Calculator')
+ci_alpha = st.number_input(r'$\alpha$')
+ci_sigma = st.number_input(r'$SD$')
+ci_mean = st.number_input(r'$\overline{x}$')
+ci_sample_size = st.number_input('Sample size', key='ci_sample_size')
+ci_upper_bound, ci_lower_bound, factor = ci_norm_calculater(ci_alpha, ci_sigma, ci_sample_size, ci_mean)
+st.markdown(r'${}\%CI$'.format((1-ci_alpha) * 100))
+st.markdown(r'$Lower bound = {:.2f}$'.format(ci_lower_bound))
+st.markdown(r'$Upper bound = {:.2f}$'.format(ci_upper_bound))
+
+st.markdown('$CI$ สามารถคำนวณได้จากสูตรใน Excel ดังนี้')
+st.code('CONFIDENCE.NORM(alpha, std, sample_size) = CONFIDENCE.NORM({}, {}, {}) = {:.2f}'.format(ci_alpha, ci_sigma, ci_sample_size, factor))
+st.markdown(r'ค่า $CI = {:.2f}\pm{:.2f}$'.format(ci_mean, factor))
+
+
+st.header('Self Check')
+st.markdown(r'1) น้ำหนักแรกเกิดของทารก $100$ คนคือ $3.0kg$ และมีค่า $SD=0.25kg$ ถ้าการกระจายตัวของน้ำหนักเป็นแบบ normal distribution จงหาค่า $95\%CI$ ของค่า $\overline{x}$')
+with st.expander('See an answer'):
+    st.markdown(r'$95\%CI = (2.95 - 3.05)$')
+
+
+st.markdown(r'2) ตัวอย่างถุงลูกอมจำนวน $16$ ถุงถูกเลือกมาอย่างสุ่ม โดยการกระจายตัวของค่าน้ำหนักของถุงเป็นแบบปกติ ค่าน้ำหนักเฉลี่ยของถุงตัวอย่างคือ $2.0oz$ โดยมีค่า $s=0.12oz$ และค่า $\sigma=0.1oz$ จงหาค่า $95\%CI$ ของค่าเฉลี่ยน้ำหนักถุง')
+with st.expander('See an answer'):
+    st.markdown(r'$95\%CI = (1.95 - 2.05)$')
+
+st.markdown(r'3) ครูท่านหนึ่งต้องการเก็บข้อมูลจำนวนจดหมายที่นร.ที่เข้าค่ายส่งกลับบ้าน โดยมีค่าเบี่ยงเบนมาตรฐานอยู่ที่ 2.5 ฉบับ จากการสำรวจนร.จำนวน 20 คนพบว่ามีค่าเฉลี่ยที่ 7.9 และมีค่า $s=2.8$ จงหาค่า $95\%CI$')
+with st.expander('See an answer'):
+    st.markdown(r'$95\%CI = (6.80 - 9.00)$')
