@@ -43,11 +43,11 @@ def plot_deviation_sample_mean_chart(scores_mean, num_sample, num_trials):
         sample_means.append(sample_mean)
 
     fig, axes = plt.subplots(2)
-    axes[0].hlines(y=0, xmin=0, xmax=len(deviations), color='red')
     axes[0].set_ylim(-5, 5)
     std = np.std(sample_means)
     hvalues, bins, _ = axes[1].hist(sample_means, bins=10)
     axes[0].plot(deviations)
+    axes[0].hlines(y=0, xmin=0, xmax=len(deviations), color='red')
     axes[1].vlines(x=scores_mean, ymax=max(hvalues), ymin=0, color='red', linestyles='--')
     axes[1].vlines(x=scores_mean - std, ymax=max(hvalues), ymin=0, color='red', linestyles='--')
     axes[1].vlines(x=scores_mean + std, ymax=max(hvalues), ymin=0, color='red', linestyles='--')
@@ -72,7 +72,7 @@ def plot_deviation_sample_mean_chart(scores_mean, num_sample, num_trials):
     st.pyplot(fig)
 
     # st.markdown(r'Standard deviation of the sample means is {}'.format(np.mean([d ** 2 for d in deviations])))
-    st.markdown(r'Standard Error of the Mean $(SEM)$ is {}'.format(np.std(scores)[0] / np.sqrt(num_sample)))
+    st.markdown(r'$Standard\ Error\ of\ the\ Mean\ (SEM)={:.2f}$'.format(np.std(scores)[0] / np.sqrt(num_sample)))
 
 
 num_sample = st.slider('Number of students', min_value=10, max_value=70, step=10)
@@ -80,21 +80,31 @@ num_trials = st.slider('Number of trials', min_value=50, max_value=1000, step=50
 
 plot_deviation_sample_mean_chart(scores_mean=mean_scores, num_sample=num_sample, num_trials=num_trials)
 
+st.header('Note')
+st.markdown(r'เมื่อจำนวน $n$ หรือ $sample\ size$ เพิ่มขึ้น ค่า $SEM$ ลดลง')
+st.markdown(r'เมื่อจำนวน $trials$ เพิ่มขึ้น กราฟจะเป็นลักษณะ normal distribution มากขึ้น ทั้งนี้ ไม่ขึ้นกับลักษณะการกระจายตัวของข้อมูลดั้งเดิม')
+st.markdown(r'ค่า $SE$ คำนวณจาก $\frac{\sigma}{\sqrt(n)}$')
 
-def plot_se(sigma, n=[10, 20, 40, 80, 160, 320, 640, 1280]):
+def plot_se(sigma, n=[1, 10, 20, 40, 80, 160, 320, 640, 1280]):
     ses = sigma / np.sqrt(n)
     st.dataframe({'SE': ses, 'n': n})
+    fig, ax = plt.subplots()
+    ax.plot(n, ses, '-*')
+    ax.set_ylabel('SE')
+    ax.set_xlabel('sample size')
+    ax.set_title('Sample size vs SE')
+    st.pyplot(fig)
 
-
-sigma = st.slider('Sigma', min_value=50, max_value=100, step=10)
-
-plot_se(sigma)
 
 st.header('Z-statistic or Z-score')
 st.markdown(r'$Z-statistic$ เหมือนกับ $Z-score$')
 st.markdown(r'***$Z-statistic$*** คำนวณจากสมการ $Z = \frac{\overline{x}-\mu}{\frac{\sigma}{\sqrt{n}}}$')
+sigma = st.slider('Sigma', min_value=50, max_value=100, step=10)
+
+plot_se(sigma)
+
 st.markdown(
-    r'ค่า ***$Z score$*** มีค่าเท่ากับ $Z statistic$ เมื่อ $n=1$.')
+    r'ค่า ***$Z-score$*** มีค่าเท่ากับ $Z-statistic$ เมื่อ $n=1$.')
 st.markdown(
     r'สมมติเราสุ่มตัวอย่างจากประชากรที่มีค่า $\mu=50$ และ $\sigma=10$ มาสามกลุ่ม โดยทั้งสามกลุ่มมีค่า ${\overline{x}}=52$ และจำนวนตัวอย่างคือ $30, 60, 100$ ตามลำดับ จงคำนวณค่า $Z statistic$')
 
